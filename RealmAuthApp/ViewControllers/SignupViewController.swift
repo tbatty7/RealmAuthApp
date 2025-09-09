@@ -18,7 +18,7 @@ class SignupViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     
     // MARK: - Properties
-    private var authService: AuthService!
+    private var authService: RefactoredAuthService!
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
@@ -60,7 +60,8 @@ class SignupViewController: UIViewController {
     
     private func setupAuthService() {
         do {
-            authService = try AuthService()
+            let database = try DatabaseFactory.createDefaultDatabase()
+            authService = RefactoredAuthService(database: database)
         } catch {
             showAlert(title: "Error", message: "Failed to initialize authentication service")
         }
@@ -88,7 +89,7 @@ class SignupViewController: UIViewController {
             showAlert(title: "Success", message: "Account created successfully!") { [weak self] in
                 self?.navigateToLogin()
             }
-        } catch let error as AuthService.AuthError {
+        } catch let error as RefactoredAuthService.AuthError {
             showAlert(title: "Registration Failed", message: error.localizedDescription)
         } catch {
             showAlert(title: "Error", message: "An unexpected error occurred")

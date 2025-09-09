@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "A26046F7-B8C4-4130-AC56-A1BBE38159C8",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:RealmAuthApp.xcodeproj",
+      "identifier" : "22999F542E6F3AC900CC14B6",
+      "name" : "RealmAuthApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:RealmAuthApp.xcodeproj",
+        "identifier" : "22999F6A2E6F3ACB00CC14B6",
+        "name" : "RealmAuthAppTests"
+      }
+    }
+  ],
+  "version" : 1
+}
