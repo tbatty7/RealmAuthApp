@@ -9,24 +9,12 @@
 import XCTest
 @testable import RealmAuthApp
 
-/// Base test class for testing ANY implementation of UserDatabaseProtocol
-/// Subclass this to test Realm, GRDB, or any other database implementation
 class UserDatabaseProtocolTests: XCTestCase {
-    
-//    override class var defaultTestSuite: XCTestSuite {
-//            // Prevent XCTest from running this class directly
-//            return XCTestSuite(name: "AbstractUserDatabaseProtocolTests (abstract — skipped)")
-//        }
     
     var database: UserDatabaseProtocol!
     
-    
-    func createDatabase() throws -> UserDatabaseProtocol {
-        return try InMemoryUserDatabase()
-    }
-    
     override func setUpWithError() throws {
-        database = try createDatabase()
+        database = try InMemoryUserDatabase()
     }
     
     override func tearDownWithError() throws {
@@ -34,16 +22,11 @@ class UserDatabaseProtocolTests: XCTestCase {
         database = nil
     }
     
-    // MARK: - Basic CRUD Tests
-    
     func testSaveUser() throws {
-        // Given
         let user = DomainUser.create(username: "test", email: "test@example.com", password: "hashedPassword")
         
-        // When
         let savedUser = try database.saveUser(user)
         
-        // Then
         XCTAssertEqual(savedUser.id, user.id)
         XCTAssertEqual(savedUser.username, user.username)
         XCTAssertEqual(savedUser.email, user.email)
@@ -51,14 +34,11 @@ class UserDatabaseProtocolTests: XCTestCase {
     }
     
     func testFindUserByEmail() throws {
-        // Given
         let user = DomainUser.create(username: "test", email: "test@example.com", password: "hashedPassword")
         _ = try database.saveUser(user)
         
-        // When
         let foundUser = try database.findUserByEmail("test@example.com")
         
-        // Then
         XCTAssertNotNil(foundUser)
         XCTAssertEqual(foundUser?.id, user.id)
         XCTAssertEqual(foundUser?.username, user.username)
@@ -66,38 +46,30 @@ class UserDatabaseProtocolTests: XCTestCase {
     }
     
     func testFindUserByEmailNonexistent() throws {
-        // When
         let foundUser = try database.findUserByEmail("nonexistent@example.com")
         
-        // Then
         XCTAssertNil(foundUser)
     }
     
     func testFindUserById() throws {
-        // Given
         let user = DomainUser.create(username: "test", email: "test@example.com", password: "hashedPassword")
         _ = try database.saveUser(user)
         
-        // When
         let foundUser = try database.findUserById(user.id)
         
-        // Then
         XCTAssertNotNil(foundUser)
         XCTAssertEqual(foundUser?.id, user.id)
         XCTAssertEqual(foundUser?.email, user.email)
     }
     
     func testGetAllUsers() throws {
-        // Given
         let user1 = DomainUser.create(username: "user1", email: "user1@example.com", password: "password1")
         let user2 = DomainUser.create(username: "user2", email: "user2@example.com", password: "password2")
         _ = try database.saveUser(user1)
         _ = try database.saveUser(user2)
         
-        // When
         let allUsers = try database.getAllUsers()
         
-        // Then
         XCTAssertEqual(allUsers.count, 2)
         let userIds = allUsers.map { $0.id }
         XCTAssertTrue(userIds.contains(user1.id))
@@ -286,33 +258,3 @@ class UserDatabaseProtocolTests: XCTestCase {
         }
     }
 }
-
-// MARK: - Concrete Test Implementations
-
-/// Test InMemoryUserDatabase implementation
-//class InMemoryUserDatabaseTests: UserDatabaseProtocolTests {
-//    override func createDatabase() throws -> UserDatabaseProtocol {
-//        return try InMemoryUserDatabase()
-//    }
-//}
-
-/// Test RealmUserDatabase implementation
-/// This uses a temporary Realm configuration to avoid affecting the main database
-//class RealmUserDatabaseTests: AbstractUserDatabaseProtocolTests {
-//    override func createDatabase() throws -> UserDatabaseProtocol {
-//
-//        return try RealmUserDatabase()
-//        // Note: RealmUserDatabase could be modified to accept a custom Realm configuration for testing
-//        // to use an in-memory Realm or a temporary file
-//        // but if you do that, you break the implementation encapsulation
-//    }
-//}
-
-// When GRDB is implemented, add:
-/*
-class GRDBUserDatabaseTests: UserDatabaseProtocolTests {
-    override func createDatabase() throws -> UserDatabaseProtocol {
-        return try GRDBUserDatabase()
-    }
-}
-*/
