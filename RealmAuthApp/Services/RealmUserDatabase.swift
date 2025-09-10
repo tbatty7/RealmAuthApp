@@ -49,30 +49,24 @@ class RealmUserDatabase: UserDatabaseProtocol {
     }
     
     func findUserByEmail(_ email: String) throws -> DomainUser? {
-        do {
-            let realmUser = realm.objects(User.self).filter("email == %@", email).first
-            return realmUser?.toDomainUser()
-        } catch {
-            throw DatabaseError.queryFailed
-        }
+        
+        let realmUser = realm.objects(User.self).filter("email == %@", email).first
+        return realmUser?.toDomainUser()
+        
     }
     
     func findUserById(_ id: String) throws -> DomainUser? {
-        do {
-            let realmUser = realm.objects(User.self).filter("id == %@", id).first
-            return realmUser?.toDomainUser()
-        } catch {
-            throw DatabaseError.queryFailed
-        }
+        
+        let realmUser = realm.objects(User.self).filter("id == %@", id).first
+        return realmUser?.toDomainUser()
+        
     }
     
     func getAllUsers() throws -> [DomainUser] {
-        do {
-            let realmUsers = realm.objects(User.self)
-            return Array(realmUsers).map { $0.toDomainUser() }
-        } catch {
-            throw DatabaseError.queryFailed
-        }
+        
+        let realmUsers = realm.objects(User.self)
+        return Array(realmUsers).map { $0.toDomainUser() }
+        
     }
     
     func updateUser(_ user: DomainUser) throws -> DomainUser {
@@ -112,22 +106,11 @@ class RealmUserDatabase: UserDatabaseProtocol {
         }
     }
     
-    func deleteAllUsers() throws -> Void {
-
-            let allUsers = try getAllUsers()
-            for user in allUsers {
-                try deleteUser(userId: user.id)
-            }
-
-    }
-    
     func userExists(email: String) throws -> Bool {
-        do {
-            let count = realm.objects(User.self).filter("email == %@", email).count
-            return count > 0
-        } catch {
-            throw DatabaseError.queryFailed
-        }
+        
+        let count = realm.objects(User.self).filter("email == %@", email).count
+        return count > 0
+        
     }
     
     // MARK: - Database Management
@@ -162,11 +145,4 @@ extension User {
         )
     }
     
-    /// Create Realm User from DomainUser
-    static func fromDomainUser(_ domainUser: DomainUser) -> User {
-        let user = User(username: domainUser.username, email: domainUser.email, password: domainUser.password)
-        user.id = domainUser.id
-        user.createdAt = domainUser.createdAt
-        return user
-    }
 }

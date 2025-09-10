@@ -28,24 +28,17 @@ class DatabaseFactory {
         case .realm:
             return try RealmUserDatabase()
         case .grdb:
-            // When GRDB is implemented, uncomment this:
-            // return try GRDBUserDatabase()
-            throw DatabaseError.unknown // Placeholder until GRDB is implemented
+            return try GrdbUserDatabase()
         case .inMemory:
             return try InMemoryUserDatabase()
         }
     }
     
     /// Create the default database (currently Realm)
-    /// This can be changed to switch the entire app to a different database
-    /// - Returns: Default database instance
-    /// - Throws: DatabaseError if creation fails
     static func createDefaultDatabase() throws -> UserDatabaseProtocol {
-        return try createDatabase(type: .realm)
+        return try createDatabase(type: .grdb)
     }
 }
-
-// MARK: - In-Memory Database for Testing
 
 /// In-memory database implementation for testing
 class InMemoryUserDatabase: UserDatabaseProtocol {

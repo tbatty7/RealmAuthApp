@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		225DC1062E721D9C008316E1 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 225DC1052E721D9C008316E1 /* GRDB */; };
 		22C1376C2E6F5D8900F402EE /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 22C1376B2E6F5D8900F402EE /* RealmSwift */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +72,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22C1376C2E6F5D8900F402EE /* RealmSwift in Frameworks */,
+				225DC1062E721D9C008316E1 /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +135,7 @@
 			name = RealmAuthApp;
 			packageProductDependencies = (
 				22C1376B2E6F5D8900F402EE /* RealmSwift */,
+				225DC1052E721D9C008316E1 /* GRDB */,
 			);
 			productName = RealmAuthApp;
 			productReference = 22999F552E6F3AC900CC14B6 /* RealmAuthApp.app */;
@@ -191,6 +194,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				22C137612E6F5BF200F402EE /* XCRemoteSwiftPackageReference "realm-swift" */,
+				225DC1042E721D9C008316E1 /* XCRemoteSwiftPackageReference "GRDB" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 22999F562E6F3AC900CC14B6 /* Products */;
@@ -494,6 +498,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		225DC1042E721D9C008316E1 /* XCRemoteSwiftPackageReference "GRDB" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		22C137612E6F5BF200F402EE /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift";
@@ -505,6 +517,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		225DC1052E721D9C008316E1 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 225DC1042E721D9C008316E1 /* XCRemoteSwiftPackageReference "GRDB" */;
+			productName = GRDB;
+		};
 		22C1376B2E6F5D8900F402EE /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 22C137612E6F5BF200F402EE /* XCRemoteSwiftPackageReference "realm-swift" */;

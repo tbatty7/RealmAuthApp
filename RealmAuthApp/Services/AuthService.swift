@@ -15,33 +15,7 @@ class AuthService {
     init() throws {
         realm = try Realm()
     }
-    
-    enum AuthError: Error, LocalizedError {
-        case userAlreadyExists
-        case invalidCredentials
-        case weakPassword
-        case invalidEmail
-        case userNotFound
-        case realmError
-        
-        var errorDescription: String? {
-            switch self {
-            case .userAlreadyExists:
-                return "User with this email already exists"
-            case .invalidCredentials:
-                return "Invalid email or password"
-            case .weakPassword:
-                return "Password must be at least 6 characters long"
-            case .invalidEmail:
-                return "Please enter a valid email address"
-            case .userNotFound:
-                return "User not found"
-            case .realmError:
-                return "Database error occurred"
-            }
-        }
-    }
-    
+       
     // MARK: - Registration
     func registerUser(username: String, email: String, password: String) throws -> User {
         // Validate input
@@ -123,6 +97,32 @@ class AuthService {
             }
         } catch {
             throw AuthError.realmError
+        }
+    }
+    
+    enum AuthError: Error, LocalizedError {
+        case userAlreadyExists
+        case invalidCredentials
+        case weakPassword
+        case invalidEmail
+        case userNotFound
+        case realmError
+        
+        var errorDescription: String? {
+            switch self {
+            case .userAlreadyExists:
+                return "User with this email already exists"
+            case .invalidCredentials:
+                return "Invalid email or password"
+            case .weakPassword:
+                return "Password must be at least 6 characters long"
+            case .invalidEmail:
+                return "Please enter a valid email address"
+            case .userNotFound:
+                return "User not found"
+            case .realmError:
+                return "Database error occurred"
+            }
         }
     }
 }
