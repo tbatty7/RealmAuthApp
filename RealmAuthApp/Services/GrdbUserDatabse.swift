@@ -7,6 +7,7 @@
 
 import Foundation
 import GRDB
+import RealmSwift
 
 final class GrdbUserDatabase: UserDatabaseProtocol {
     private var dbQueue: DatabaseQueue?
@@ -143,6 +144,20 @@ final class GrdbUserDatabase: UserDatabaseProtocol {
                 t.column("password", .text).notNull()
                 t.column("createdAt", .datetime).notNull()
             }
+            
+            let realm = try Realm()
+                let realmUsers = realm.objects(User.self)
+
+                for rUser in realmUsers {
+                    let grdbUser = GRDBUser(
+                        id: rUser.id,
+                        username: rUser.username,
+                        email: rUser.email,
+                        password: rUser.password,
+                        createdAt: rUser.createdAt
+                    )
+                    try grdbUser.insert(db)
+                }
         }
         return migrator
     }
