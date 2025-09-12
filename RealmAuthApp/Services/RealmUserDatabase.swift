@@ -13,13 +13,17 @@ import RealmSwift
 class RealmUserDatabase: UserDatabaseProtocol {
     private let realm: Realm
     
-    required init() throws {
-        do {
-            realm = try Realm()
-        } catch {
-            throw DatabaseError.connectionFailed
-        }
-    }
+    required init(config: Any? = nil) throws {
+          do {
+              if let config = config {
+                  realm = try Realm(configuration: config as! Realm.Configuration)
+              } else {
+                  realm = try Realm() // default config
+              }
+          } catch {
+              throw DatabaseError.connectionFailed
+          }
+      }
     
     // MARK: - User Operations
     

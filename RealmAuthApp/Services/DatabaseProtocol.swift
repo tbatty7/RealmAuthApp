@@ -16,6 +16,7 @@ enum DatabaseError: Error, LocalizedError, Equatable {
     case queryFailed
     case userNotFound
     case duplicateUser
+    case migrationFailed
     case unknown
     
     var errorDescription: String? {
@@ -32,6 +33,8 @@ enum DatabaseError: Error, LocalizedError, Equatable {
             return "User not found in database"
         case .duplicateUser:
             return "User already exists in database"
+        case .migrationFailed:
+            return "Database migration failed"
         case .unknown:
             return "An unknown database error occurred"
         }
@@ -45,7 +48,7 @@ protocol UserDatabaseProtocol {
     
     /// Initialize the database connection
     /// - Throws: DatabaseError if connection fails
-    init() throws
+    init(config: Any?) throws
     
     // MARK: - User Operations
     

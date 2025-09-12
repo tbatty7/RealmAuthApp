@@ -60,7 +60,7 @@ class SignupViewController: UIViewController {
     
     private func setupAuthService() {
         do {
-            let database = try DatabaseFactory.createDefaultDatabase()
+            let database = try DatabaseFactory.createDefaultUserDb()
             authService = RefactoredAuthService(database: database)
         } catch {
             showAlert(title: "Error", message: "Failed to initialize authentication service")

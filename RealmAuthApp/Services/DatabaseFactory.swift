@@ -19,10 +19,6 @@ enum DatabaseType {
 /// This keeps the AuthService completely database-agnostic
 class DatabaseFactory {
     
-    /// Create a database instance based on type
-    /// - Parameter type: The type of database to create
-    /// - Returns: Database instance conforming to UserDatabaseProtocol
-    /// - Throws: DatabaseError if creation fails
     static func createDatabase(type: DatabaseType) throws -> UserDatabaseProtocol {
         switch type {
         case .realm:
@@ -34,8 +30,7 @@ class DatabaseFactory {
         }
     }
     
-    /// Create the default database (currently Realm)
-    static func createDefaultDatabase() throws -> UserDatabaseProtocol {
+    static func createDefaultUserDb() throws -> UserDatabaseProtocol {
         return try createDatabase(type: .grdb)
     }
 }
@@ -44,7 +39,7 @@ class DatabaseFactory {
 class InMemoryUserDatabase: UserDatabaseProtocol {
     private var users: [String: DomainUser] = [:]
     
-    required init() throws {
+    required init(config: Any? = nil) throws {
         // Nothing to initialize for in-memory database
         // throws required by protocol but never actually throws
     }

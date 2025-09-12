@@ -14,20 +14,19 @@ final class GrdbUserDatabase: UserDatabaseProtocol {
     
     // MARK: - Lifecycle
     
-    required init() throws {
+    required init(config: Any? = nil) throws {
         do {
             let dbURL = try FileManager.default
                 .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
                 .appendingPathComponent("users.sqlite")
             
-            dbQueue = try DatabaseQueue(path: dbURL.path)
-            try migrator.migrate(dbQueue!)
+            dbQueue = try DatabaseQueue(path: config as? String ?? dbURL.path)
         } catch {
             throw DatabaseError.connectionFailed
         }
     }
     
-    // MARK: - User Operations
+
     
     func saveUser(_ user: DomainUser) throws -> DomainUser {
         let grdbUser = GRDBUser(from: user)
@@ -132,9 +131,11 @@ final class GrdbUserDatabase: UserDatabaseProtocol {
         return stats
     }
     
-    // MARK: - Migration
-    
-    private var migrator: DatabaseMigrator {
+  
+    public func runMigration(realmConfig: Realm.Configuration = .defaultConfiguration) throws {
+        guard let dbQueue else {
+            throw DatabaseError.connectionFailed
+        }
         var migrator = DatabaseMigrator()
         migrator.registerMigration("createUsers") { db in
             try db.create(table: "users") { t in
@@ -145,20 +146,28 @@ final class GrdbUserDatabase: UserDatabaseProtocol {
                 t.column("createdAt", .datetime).notNull()
             }
             
-            let realm = try Realm()
-                let realmUsers = realm.objects(User.self)
-
-                for rUser in realmUsers {
-                    let grdbUser = GRDBUser(
-                        id: rUser.id,
-                        username: rUser.username,
-                        email: rUser.email,
-                        password: rUser.password,
-                        createdAt: rUser.createdAt
-                    )
-                    try grdbUser.insert(db)
-                }
+            // Copy existing users from Realm → GRDB
+            
+            let realm = try Realm(configuration: realmConfig)
+            let realmUsers = realm.objects(User.self)
+            
+            for rUser in realmUsers {
+                let grdbUser = GRDBUser(
+                    id: rUser.id,
+                    username: rUser.username,
+                    email: rUser.email,
+                    password: rUser.password,
+                    createdAt: rUser.createdAt
+                )
+                try grdbUser.insert(db)
+            }
         }
-        return migrator
+        
+        // Actually run the migration
+        do {
+            try migrator.migrate(dbQueue)
+        } catch {
+            throw DatabaseError.migrationFailed
+        }
     }
 }
